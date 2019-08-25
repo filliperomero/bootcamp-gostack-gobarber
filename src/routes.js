@@ -13,4 +13,6 @@ routes.post('/sessions', SessionController.store);
 // All routes below here will need to send the token in the header
 routes.use(authMiddlware);
 
+routes.put('/users', UserController.update);
+
 export default routes;
