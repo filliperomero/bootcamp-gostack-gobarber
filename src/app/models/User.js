@@ -27,6 +27,11 @@ class User extends Model {
 
     return this;
   }
+
+  // Method to compare the password received with the password in DB (both hash)
+  checkPassword(password) {
+    return bcryptjs.compare(password, this.password_hash);
+  }
 }
 
 export default User;
