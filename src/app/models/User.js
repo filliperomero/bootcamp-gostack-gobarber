@@ -28,6 +28,10 @@ class User extends Model {
     return this;
   }
 
+  static associate(models) {
+    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+  }
+
   // Method to compare the password received with the password in DB (both hash)
   checkPassword(password) {
     return bcryptjs.compare(password, this.password_hash);
