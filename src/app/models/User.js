@@ -29,7 +29,9 @@ class User extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.File, { foreignKey: 'avatar_id' });
+    // 'as' is like a nickname, so when you retrieve the information, the
+    // name come as the name you put in that propriety
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
   }
 
   // Method to compare the password received with the password in DB (both hash)
