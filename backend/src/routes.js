@@ -11,24 +11,33 @@ import ScheduleController from './app/controllers/ScheduleController';
 import NotificationController from './app/controllers/NotificationController';
 import AvailableController from './app/controllers/AvailableController';
 
+import ValidateUserStore from './app/Validators/UserStore';
+import ValidateUserUpdate from './app/Validators/UserUpdate';
+import ValidateSessionStore from './app/Validators/SessionStore';
+import ValidateAppointmentStore from './app/Validators/AppointmentStore';
+
 import authMiddlware from './app/middlewares/auth';
 
 const routes = new Router();
 const uploads = multer(multerConfig);
 
-routes.post('/users', UserController.store);
-routes.post('/sessions', SessionController.store);
+routes.post('/users', ValidateUserStore, UserController.store);
+routes.post('/sessions', ValidateSessionStore, SessionController.store);
 
 // All routes below here will need to send the token in the header
 routes.use(authMiddlware);
 
-routes.put('/users', UserController.update);
+routes.put('/users', ValidateUserUpdate, UserController.update);
 
 routes.get('/providers', ProviderController.index);
 routes.get('/providers/:providerId/available', AvailableController.index);
 
 routes.get('/appointments', AppointmentController.index);
-routes.post('/appointments', AppointmentController.store);
+routes.post(
+  '/appointments',
+  ValidateAppointmentStore,
+  AppointmentController.store
+);
 routes.delete('/appointments/:id', AppointmentController.delete);
 
 routes.get('/schedule', ScheduleController.index);
