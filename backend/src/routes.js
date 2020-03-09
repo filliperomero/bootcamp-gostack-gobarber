@@ -1,6 +1,9 @@
 import { Router } from 'express';
+import Brute from 'express-brute';
+import BruteRedis from 'express-brute-redis';
 import multer from 'multer';
 import multerConfig from './config/multer';
+import redisConfig from './config/redis';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
@@ -21,8 +24,20 @@ import authMiddlware from './app/middlewares/auth';
 const routes = new Router();
 const uploads = multer(multerConfig);
 
+const bruteStore = new BruteRedis({
+  host: redisConfig.host,
+  port: redisConfig.port,
+});
+
+const bruteForce = new Brute(bruteStore);
+
 routes.post('/users', ValidateUserStore, UserController.store);
-routes.post('/sessions', ValidateSessionStore, SessionController.store);
+routes.post(
+  '/sessions',
+  bruteForce.prevent,
+  ValidateSessionStore,
+  SessionController.store
+);
 
 // All routes below here will need to send the token in the header
 routes.use(authMiddlware);
